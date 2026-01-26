@@ -8,11 +8,12 @@ router.get("/", (req,res)=>{
 })
 
 router.get("/new", (req, res) => {
-    res.send("User  New Form")
+    res.render("users/new")
 })
 
 router.post("/", (req, res) =>{
-    res.send("Create User")
+    console.log(req.body.firstName)
+    res.send(`Welcome master ${req.body.firstName}`)
 })
 
 router
