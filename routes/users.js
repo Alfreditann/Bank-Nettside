@@ -3,21 +3,8 @@ const router = express.Router()
 
 
 
-router.get("/", (req,res)=>{
-    res.send("User List")
-})
-
-router.get("/new", (req, res) => {
-    res.render("users/new")
-})
-
-router.post("/", (req, res) =>{
-    console.log(req.body.firstName)
-    res.send(`Welcome master ${req.body.firstName}`)
-})
-
 router
-    .route("/:id")
+    .route("/user/:id")
     .get((req, res) =>{
         console.log(req.user)
         res.send(`Get User With ID ${req.params.id}`)
@@ -29,7 +16,32 @@ router
         res.send(`Delete User With ID ${req.params.id}`)
     })
 
-    const users = [{name: "Alfred"}, {name: "William"}]
+    users = {"Alfred": {password: "123"}}
+
+
+
+router.get("/new", (req, res) => {
+    res.render("users/new")
+})
+
+router.post("/", (req, res) =>{ 
+    const isValid = true
+    if (isValid) {
+        users[req.body.firstName] = {password: "12345"}
+        res.redirect(`/users/`)
+    }
+    else {
+        console.log("Error")
+        res.render("user/new", {firstName: req.body.firstName})
+    }
+
+})
+router.get("/", (req,res)=>{
+    const name = users[req.body.id]
+    console.log(users)
+    res.send(`welcome ${name}`)
+})
+
 router.param("id", (req, res, next, id) => {
     req.user = users[id]
     next()
