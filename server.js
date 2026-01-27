@@ -1,22 +1,65 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config()
+}
+
 const express = require("express")
 const app = express()
+const bcrypt = require("bcrypt")
+const passport = require("passport")
+const flash = require("express-flash")
+const session = require("express-session")
 
-app.use(express.static("public"))
-app.use(express.urlencoded({extended : true}))
-app.use(express.json())
-app.set("view engine", "ejs")
+const initializePassport = require("./passport-config")
+initializePassport(passport, username =>{users.find(user => user.username === username)})
 
-// app.get("/",logger, (req, res ) =>{ 
-//  res.render("index", {text : "World"})  
-// })
+const users = []
 
-const userRouter = require("./routes/users")
+app.set("view-engine", "ejs")
+app.use(express.urlencoded({ extended: false }))
+app.use(flash())
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
-app.use("/users", userRouter)
+app.get("/", (req, res) => [
+    res.render("index.ejs", { name: "Alfred" })
+])
 
-// function logger(req, res, next){
-//     console.log(req.originalUrl)
-//     next()
-// }
+app.get("/login", (req, res) => [
+    res.render("login.ejs")
+])
+
+app.post("/login", passport.authenticate("local",{
+    successRedirect: "/",
+    failureRedirect:"login",
+    failureFlash: true
+}))
+
+
+app.get("/register", (req, res) => [
+    res.render("register.ejs")
+])
+
+app.post("/register", async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        users.push({
+            id: Date.now().toString(),
+            name: req.body.name,
+            password: hashedPassword,
+        })
+        res.redirect("/login")
+       
+    }
+    
+    catch {
+        res.redirect("/register")
+    }
+     console.log(users)
+})
 
 app.listen(3000)
