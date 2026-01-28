@@ -1,3 +1,5 @@
+const {initDB} = require("./database")
+
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config()
 }
@@ -8,6 +10,9 @@ const bcrypt = require("bcrypt")
 const passport = require("passport")
 const flash = require("express-flash")
 const session = require("express-session")
+
+initDB()
+
 
 const initializePassport = require("./passport-config")
 const { name } = require("ejs")
@@ -68,4 +73,14 @@ app.post("/register", async (req, res) => {
      console.log(users)
 })
 
-app.listen(3000)
+
+
+async function startServer() {
+    await initDB()
+}
+
+app.listen(3000,() => {
+    console.log("Server is running on http://localhost:3000"
+
+    )
+})
