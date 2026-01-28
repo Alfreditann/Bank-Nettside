@@ -1,4 +1,5 @@
-const {initDB} = require("./database")
+// Henter ut funksjoner fra database.js
+const {initDB, registerUser, getUser, getUserById} = require("./database")
 
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config()
@@ -16,8 +17,8 @@ initDB()
 
 const initializePassport = require("./passport-config")
 const { name } = require("ejs")
-initializePassport(passport, username => users.find(user => user.username === username),  
-id => users.find(user => user.id === id))
+initializePassport(passport, username => getUser(username),  
+id => getUserById(id))
 
 const users = []
 
@@ -33,15 +34,20 @@ app.use(passport.initialize())
 app.use(passport.session()) 
 
 app.get("/", (req, res) => [
-    console.log(users),
-    console.log(users[0].id),
-    res.render("index.ejs", { name: users[0].name})
+    //req query er verdier som kommer i url-en express parser dette automatisk disse i req.query js objektet
+    res.render("index.ejs", { name: req.query.name})
 ])
 
 app.get("/login", (req, res) => {
     res.render("login.ejs")
     
 })
+
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+  function(req, res) {
+    res.redirect('/?name=' + req.user.name);
+  });
 
 app.post("/login", passport.authenticate("local",{
     successRedirect: "/",
@@ -57,12 +63,14 @@ app.get("/register", (req, res) => [
 app.post("/register", async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        users.push({
+        let user = {
             id: Date.now().toString(),
             name: req.body.name,
             username: req.body.username,
-            password: hashedPassword,
-        })
+            password: hashedPassword
+        }
+        users.push(user)
+        await registerUser(user)
         res.redirect("/login")
        
     }
@@ -70,7 +78,6 @@ app.post("/register", async (req, res) => {
     catch {
         res.redirect("/register")
     }
-     console.log(users)
 })
 
 

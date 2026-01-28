@@ -12,11 +12,12 @@ const pool = mysql.createPool({
     password: "userpassord",
     port: 3306
 }).promise()
+ let conn
 
 console.log(1)
 
 async function initDB() {
-    let conn
+   
     try {
         
         conn = await pool.getConnection()
@@ -51,7 +52,7 @@ async function initDB() {
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(50) NOT NULL,
             username VARCHAR(50) NOT NULL,
-            password VARCHAR(50) NOT NULL)`  
+            password VARCHAR(255) NOT NULL)`  
         )
         console.log("table created")
 
@@ -61,11 +62,15 @@ async function initDB() {
         console.error('Table- init error:', error)
         process.exit(1)
     }
+    
+}
+async function registerUser(user) {
     try{
+      
         await conn.query(`INSERT INTO users (name, username, password) VALUES(
-            "Alfred",
-            "Alfreditan",
-            "alfredpassord"
+            "${user.name}",
+            "${user.username}",
+            "${user.password}"
             ); `)
     }
     catch(error){
@@ -73,6 +78,32 @@ async function initDB() {
         process.exit(1)
     }
 }
+async function getUser(username) {
+    try{
+      
+        let result = await conn.query(`SELECT * FROM users WHERE username = "${username}";`)
+        let user = result.shift().shift()
+        console.log("hei", result)
+        return user;
+    }
+    catch(error){
+        console.error('Insert init error:', error)
+        process.exit(1)
+    }
+}
+async function getUserById(id) {
+    try{
+      
+        let result = await conn.query(`SELECT * FROM users WHERE id = "${id}";`)
+        let user = result.shift().shift()
+        console.log("hei", result)
+        return user;
+    }
+    catch(error){
+        console.error('Insert init error:', error)
+        process.exit(1)
+    }
+}
 //initDB()
-module.exports = {pool, initDB, DB_NAME}
+module.exports = {pool, initDB, DB_NAME, registerUser, getUser, getUserById}
  
