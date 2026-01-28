@@ -13,14 +13,6 @@ const pool = mysql.createPool({
     port: 3306
 }).promise()
 
-const pool2 = mysql.createPool({
-    host: "localhost",
-    user: "bank_user",
-    password: "userpassord",
-    db: "bank",
-    port: 3306
-}).promise()
-
 console.log(1)
 
 async function initDB() {
@@ -62,9 +54,22 @@ async function initDB() {
             password VARCHAR(50) NOT NULL)`  
         )
         console.log("table created")
+
+
     }
     catch(error) {
         console.error('Table- init error:', error)
+        process.exit(1)
+    }
+    try{
+        await conn.query(`INSERT INTO users (name, username, password) VALUES(
+            "Alfred",
+            "Alfreditan",
+            "alfredpassord"
+            ); `)
+    }
+    catch(error){
+        console.error('Insert init error:', error)
         process.exit(1)
     }
 }
