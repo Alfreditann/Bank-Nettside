@@ -1,0 +1,60 @@
+userpassord
+
+
+PASSPORT JS er en middleware  på hver hhtp request brukeren sender så henter den requesten fra express server.
+passport bruker strategier for autentisering. så den skjekker hvilken strategi vi bruker(session, jwt).
+så vil da passport bruke strategien for å finne ut om denne brukeren er autentisert for å få tilgang info/ressusene.
+hvis ja så vil passport la brukeren gå igjennom express ruten, i mitt eksempel "./". 
+hvis nei så vil du bli redirectet til "/login" med en express-flash melding(eks. denne brukeren finnes ikke eller feil passord.) 
+
+EXPRESS-FLASh er en middleware som bruker til å vise "feil" meldinger. så eks hvis jeg logger inn med feil passord
+så vil jeg bli redirectet tilbake til login men express-flash viser også en tekst som er eks. feilpassord eller brukeren finnes ikke.
+
+
+
+
+initializePassport(passport, username => getUser(username),  
+id => getUserById(id))
+
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+
+app.use(passport.session()) 
+
+
+passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+
+ passport.authenticate("local",{
+    successRedirect: "/",
+    failureRedirect:"login",
+    failureFlash: true
+})
+
+app.use(passport.initialize())
+
+const initializePassport = require("./passport-config")
+
+const passport = require("passport")
+
+app.use(flash())
+
+const flash = require("express-flash")
+
+
+const authenticateToken = (req, res, next) => {
+//     const authHeader = req.headers["authorization"]
+//     const token = authHeader && authHeader.split("")[1]
+//     try {
+//         const decoded = jwt.verify(token, JWT_SECRET)
+//         req.user = decoded
+
+//         next()
+//     }
+//     catch(error){
+//         return res.status(403).json ("invalid token")
+//     }
+//     if (!token) return res.status(401).json("Token requierd")

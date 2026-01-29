@@ -8,33 +8,29 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express")
 const app = express()
 const bcrypt = require("bcrypt")
-const passport = require("passport")
-const flash = require("express-flash")
-const session = require("express-session")
-
+const bodyParser = require("body-parser")
+const jwt = require("jsonwebtoken")
+const JWT_SECRET = process.env.JWT_SECRET // sier at den skal hente jwt fra .env
 initDB()
 
 
-const initializePassport = require("./passport-config")
-const { name } = require("ejs")
-initializePassport(passport, username => getUser(username),  
-id => getUserById(id))
 
-const users = []
+const { name } = require("ejs")
+//initializePassport gjør sånn at passord og bruker navn skal bli hentet ut fra getUser/getUserById funksjonen
+
+
 
 app.set("view-engine", "ejs")
-app.use(express.urlencoded({ extended: false }))
-app.use(flash())
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}))
-app.use(passport.initialize())
-app.use(passport.session()) 
+// Express.urlencoded er en metode i express som bruker til å recognize innkomende objecter som strings eller arrays
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(bodyParser.json())
+
+
+
 
 app.get("/", (req, res) => [
-    //req query er verdier som kommer i url-en express parser dette automatisk disse i req.query js objektet
+    //req query er verdier som kommer i url-en express parser dette automatisk. disse i req.query js objektet
     res.render("index.ejs", { name: req.query.name})
 ])
 
@@ -43,17 +39,30 @@ app.get("/login", (req, res) => {
     
 })
 
-app.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
-  function(req, res) {
-    res.redirect('/?name=' + req.user.name);
-  });
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body //henter brukernavn og passord fra req.body
 
-app.post("/login", passport.authenticate("local",{
-    successRedirect: "/",
-    failureRedirect:"login",
-    failureFlash: true
-}))
+  const user = await getUser(username) //venter på at den får brukernavn fra databasen
+  if (!user) return res.status(400).json("User not found") //hvis den ikke finner brukeren så skal den sende error
+
+  const match = await bcrypt.compare(password, user.password) //skjekker om passordet som ble skrevet inn matcher passordet i databasen
+  if (!match) return res.status(403).json("Wrong password") // hvis det ikke matcher så skal den returnere en feil melding
+
+  const payload = { // definerer hva det er som skal bli signert av jwt
+    id: user.id,
+    name: user.name,
+    username: user.username
+  }
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }) //definerer token så jeg kan se den i webbrowser
+
+  res.cookie("token", token, {maxAge: 1000 * 3600, sameSite: "strict"})
+  res.status(200).json({token})
+})
+
+app.get("/profile", (req,res)=> {
+    res.render("profile.ejs")
+})
 
 
 app.get("/register", (req, res) => [
@@ -62,6 +71,7 @@ app.get("/register", (req, res) => [
 
 app.post("/register", async (req, res) => {
     try {
+        // hasher passordet inkommende forespørsel fra register og bruker bcrypt algoritmen. passordet blir hashet 10 ganger
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         let user = {
             id: Date.now().toString(),
@@ -69,7 +79,6 @@ app.post("/register", async (req, res) => {
             username: req.body.username,
             password: hashedPassword
         }
-        users.push(user)
         await registerUser(user)
         res.redirect("/login")
        
