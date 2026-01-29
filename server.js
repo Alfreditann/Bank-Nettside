@@ -56,7 +56,7 @@ app.post('/login', async (req, res) => {
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }) //definerer token så jeg kan se den i webbrowser
 
-  res.cookie("token", token, {maxAge: 1000 * 3600, sameSite: "strict"})
+  res.cookie("token", token, {maxAge: 1000 * 3600, sameSite: "strict"}) // lagrer token i cokkies og så skal den expire etter en time
   res.status(200).json({token})
 })
 
