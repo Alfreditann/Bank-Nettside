@@ -1,17 +1,134 @@
-<h1>Register</h1>
-<form action="/register" method="post">
-    <div>
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" required>
-    </div>
-    <div>
-        <label for="username">username</label>
-        <input type="text" name="username" id="username" required>
-    </div>
-    <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
-    </div>
-    <button type="submit">Register</button>
-</form>
-<a href="/login">Login</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Viking Bank</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0b1f33;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255,255,255,0.03);
+      padding: 45px 50px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .brand {
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #00c6ff;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      font-size: 2.3rem;
+      font-weight: 600;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      color: white;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      outline: 2px solid #00c6ff;
+    }
+
+    button {
+      margin-top: 10px;
+      background: #00c6ff;
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #001b2e;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,198,255,0.35);
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #00c6ff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="brand">Viking Bank</div>
+
+    <!-- YOUR CODE (UNCHANGED) -->
+    <h1>Register</h1>
+    <form action="/register" method="post">
+        <div>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" required>
+        </div>
+        <div>
+            <label for="username">username</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <a href="/login">Login</a>
+    <!-- END -->
+
+  </div>
+
+</body>
+</html>

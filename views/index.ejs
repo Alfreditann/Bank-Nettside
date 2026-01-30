@@ -1,1 +1,200 @@
-<h1>hi <%= name %> </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viking Bank</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0b1f33;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    /* STICKY NAVBAR */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 40px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .logo span {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #00c6ff;
+      letter-spacing: 1px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: white;
+      opacity: 0.9;
+      font-weight: 500;
+      transition: 0.2s ease;
+    }
+
+    nav ul li a:hover {
+      color: #00c6ff;
+      opacity: 1;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      text-align: center;
+      padding: 120px 20px 60px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .hero .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .hero button {
+      padding: 14px 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.25s ease;
+    }
+
+    .btn-primary {
+      background: #00c6ff;
+      color: #001b2e;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,198,255,0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #00c6ff;
+      color: #00c6ff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0,198,255,0.1);
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      max-width: 900px;
+      margin: 0 auto 80px;
+      padding: 40px 20px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .about h2 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      color: #00c6ff;
+    }
+
+    .about p {
+      font-size: 1rem;
+      opacity: 0.85;
+      line-height: 1.8;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.85rem;
+      color: #aaa;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+  <div class="logo">
+    <img src="logo.png"style="width:40px; height:40px;">
+    <span>Viking Bank</span>
+  </div>
+  <ul>
+    <li><a href="#about">About Us</a></li>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Register</a></li>
+  </ul>
+</nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <h1>Welcome to Viking Bank 👋</h1>
+    <p>Your simple, secure, and Nordic digital banking experience. Manage your money with ease and confidence.</p>
+    <div class="buttons">
+      <a href="/login"><button class="btn-primary">Login</button></a>
+      <a href="/register"><button class="btn-secondary">Register</button></a>
+    </div>
+  </section>
+
+  <!-- ABOUT US SECTION -->
+  <section class="about" id="about">
+    <h2>About Viking Bank</h2>
+    <p>
+      Viking Bank was founded with the vision of creating a fully digital, secure, and minimalist banking experience.
+      Our mission is to provide transparency, ease-of-use, and state-of-the-art security for all our customers.
+      With Viking Bank, you can manage your finances from anywhere, anytime.
+    </p>
+    <p>
+      We combine modern fintech technology with trusted Nordic banking principles.  
+      Your money is safe, your data is private, and your experience is seamless.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 Viking Bank. All rights reserved.
+  </footer>
+
+</body>
+</html>

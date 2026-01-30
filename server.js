@@ -11,7 +11,10 @@ const bcrypt = require("bcrypt")
 const bodyParser = require("body-parser")
 const jwt = require("jsonwebtoken")
 const JWT_SECRET = process.env.JWT_SECRET // sier at den skal hente jwt fra .env
+const path = require("path");
 initDB()
+
+app.use(express.static(path.join(__dirname, "public")));
 
 
 
@@ -57,11 +60,12 @@ app.post('/login', async (req, res) => {
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }) //definerer token så jeg kan se den i webbrowser
 
   res.cookie("token", token, {maxAge: 1000 * 3600, sameSite: "strict"}) // lagrer token i cokkies og så skal den expire etter en time
-  res.status(200).json({token})
+   res.render("dashboard.ejs", { name: username });
+  
 })
 
-app.get("/profile", (req,res)=> {
-    res.render("profile.ejs")
+app.get("/dashboard", (req,res)=> {
+    res.render("dashboard.ejs")
 })
 
 
