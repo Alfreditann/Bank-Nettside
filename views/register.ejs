@@ -37,9 +37,18 @@
     }
 
     h1 {
-      margin-bottom: 25px;
+      margin-bottom: 10px;
       font-size: 2.3rem;
       font-weight: 600;
+    }
+
+    small.error {
+      color: #ff4d4d;
+      display: block;
+      margin-bottom: 15px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
     }
 
     form {
@@ -100,7 +109,16 @@
     a:hover {
       text-decoration: underline;
     }
+    small.error {
+      display: block;
+      margin: 8px 0 18px;
+      color: #ff4d4d;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+    }
   </style>
+  
 </head>
 
 <body>
@@ -108,16 +126,23 @@
   <div class="container">
     <div class="brand">Viking Bank</div>
 
-    <!-- YOUR CODE (UNCHANGED) -->
     <h1>Register</h1>
-    <form action="/register" method="post">
+    <% if (error) { %>
+    <small class="error">
+      <%= error %>
+    </small>
+    <% } %>
+
+    
+
+    <form action="/register" method="post" autocomplete="off">
         <div>
             <label for="name">Name</label>
-            <input type="text" name="name" id="name" required>
+            <input type="text" name="name" id="name" required autocomplete="off">
         </div>
         <div>
-            <label for="username">username</label>
-            <input type="text" name="username" id="username" required>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required autocomplete="off">
         </div>
         <div>
             <label for="password">Password</label>
@@ -125,8 +150,8 @@
         </div>
         <button type="submit">Register</button>
     </form>
+
     <a href="/login">Login</a>
-    <!-- END -->
 
   </div>
 

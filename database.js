@@ -52,7 +52,7 @@ async function initDB() {
         //her så lages tabelen inni bank databasen hvis table users ikke finnes
         await conn.query(`CREATE TABLE IF NOT EXISTS users (
             id INT PRIMARY KEY AUTO_INCREMENT,
-            name VARCHAR(50) NOT NULL,
+            name VARCHAR(50) NOT NULL UNIQUE,
             username VARCHAR(50) NOT NULL,
             password VARCHAR(255) NOT NULL)`  
         )
@@ -75,10 +75,9 @@ async function registerUser(user) {
             "${user.username}",
             "${user.password}"
             ); `)
-    }
+        }
     catch(error){
         console.error('Insert init error:', error)
-        process.exit(1)
     }
 }
 //get user blir brukt til å hente ut brukeren fra databasen.
@@ -95,7 +94,6 @@ async function getUser(username) {
     }
     catch(error){
         console.error('Insert init error:', error)
-        process.exit(1)
     }
 }
 // her så gjør den egentlig det samme som med brukernavn men bare med id
