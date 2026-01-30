@@ -37,18 +37,19 @@ app.get("/", (req, res) => [
     res.render("index.ejs", { name: req.query.name})
 ])
 
-app.get('/login', (req, res) => {
-  res.render('login.ejs', { error: req.query.error || null });
-});
+app.get("/login", (req, res) => {
+    res.render("login.ejs")
+    
+})
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body //henter brukernavn og passord fra req.body
 
   const user = await getUser(username) //venter på at den får brukernavn fra databasen
-  if (!user) return res.redirect('/login?error=User%20does%20not%20exsist'); //hvis den ikke finner brukeren så skal den sende error
+  if (!user) return res.status(400).json("User not found") //hvis den ikke finner brukeren så skal den sende error
 
   const match = await bcrypt.compare(password, user.password) //skjekker om passordet som ble skrevet inn matcher passordet i databasen
-  if (!match) return res.redirect('/login?error=Wrong%20password'); // hvis det ikke matcher så skal den returnere en feil melding
+  if (!match) return res.status(403).json("Wrong password") // hvis det ikke matcher så skal den returnere en feil melding
 
   const payload = { // definerer hva det er som skal bli signert av jwt
     id: user.id,
