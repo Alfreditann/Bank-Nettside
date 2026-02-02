@@ -1,17 +1,26 @@
+const { initDB, registerUser, getUser, getUserById } = require("../database")
 const express = require("express")
+const path = require("path")
+const bcrypt = require("bcrypt")
+const bodyParser = require("body-parser")
 const router = express.Router()
+const jwt = require("jsonwebtoken")
 
 router.get("/", (req, res) => {
     res.render('login.ejs', { error: req.query.error || null });
 
 })
+router.get("/register", (req, res) => {
 
+})
 router.post('/', async (req, res) => {
-    const { username, password } = req.body //henter brukernavn og passord fra req.body
-
+    console.log(req.body)
+    const {username, password} = req.body
+    
     const user = await getUser(username) //venter på at den får brukernavn fra databasen
-    if (!user) {
-        return res.render('login.ejs', { error: "User does not exsist" }) //hvis den ikke finner brukeren så skal den sende error
+    console.log(username)
+    if (!username) {
+        return res.render('login.ejs', { error: "User does not exist" }) //hvis den ikke finner brukeren så skal den sende error
     }
     console.log("user", user)
 
@@ -24,10 +33,10 @@ router.post('/', async (req, res) => {
         username: user.username
     }
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }) //definerer token så jeg kan se den i webbrowser
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" }) //definerer token så jeg kan se den i webbrowser
 
     res.cookie("token", token, { maxAge: 1000 * 3600, sameSite: "strict" }) // lagrer token i cokkies og så skal den expire etter en time
-    res.render("dashboard.ejs", { name: username });
+    res.render("dashboard.ejs", { name: user.username });
 
 })
 

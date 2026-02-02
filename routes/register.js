@@ -9,6 +9,8 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const { username } = req.body
+        loggedinUser(req.body)
+
         const existingUser = await getUser(username)
 
         // hasher passordet inkommende forespørsel fra register og bruker bcrypt algoritmen. passordet blir hashet 10 ganger
@@ -32,5 +34,8 @@ router.post("/", async (req, res) => {
         res.redirect("/register")
     }
 })
+function loggedinUser({username}){
+    console.log(username)
+}
 
-module.exports = router;
+module.exports = router,loggedinUser;
