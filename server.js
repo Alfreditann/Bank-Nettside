@@ -24,13 +24,6 @@ app.use(`/register`, registerRoute)
 
 initDB()
 
-app.use((req, res, next) => {
-    const valid = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
-
-    req.user = valid ? {id: req.cookies.token.id} : {}
-    next()
-})
-
 app.use(express.static(path.join(__dirname, "public")));
 
 

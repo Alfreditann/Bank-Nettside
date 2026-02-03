@@ -1,1 +1,11 @@
-hei <%= name%>
+<form action="/dashboard" method="post">
+      <div>
+        <label for="Aname">Account name</label>
+        <input type="text" name="Aname" id="Aname" required>
+      </div>
+      <div>
+        <label for="balance">Balance</label>
+        <input type="number" name="balance" id="balance" required>
+      </div>
+      <button type="submit">Make account</button>
+    </form>

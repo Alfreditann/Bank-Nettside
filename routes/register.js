@@ -9,7 +9,6 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const { username } = req.body
-        loggedinUser(req.body)
 
         const existingUser = await getUser(username)
 
@@ -34,8 +33,4 @@ router.post("/", async (req, res) => {
         res.redirect("/register")
     }
 })
-function loggedinUser({username}){
-    console.log(username)
-}
-
-module.exports = router,loggedinUser;
+module.exports = router;

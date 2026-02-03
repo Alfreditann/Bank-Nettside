@@ -64,7 +64,23 @@ async function initDB() {
         console.error('Table- init error:', error)
         process.exit(1)
     }
-    
+     try{
+         await conn.query(`CREATE TABLE IF NOT EXISTS bankAccounts (
+             id INT PRIMARY KEY AUTO_INCREMENT,
+             Aname VARCHAR(50) NOT NULL,
+             userId INT NOT NULL,
+             balance INT NOT NULL,
+            
+             CONSTRAINT fk_ba_us
+                FOREIGN KEY (userId)
+                REFERENCES users(id)
+                ON DELETE CASCADE)      `  
+         );
+     }
+     catch(error){
+         console.error('Table- init error:', error)
+         process.exit(1)
+     }
 }
 // hele denne funksjonen bruker til å registrere brukere inn i databasen.
 async function registerUser(user) {
@@ -110,6 +126,19 @@ async function getUserById(id) {
         process.exit(1)
     }
 }
+async function makeAccount(bAccount) {
+    try{
+      // query sier at dette skal skje i databasen. vi inserter values som brukeren har registrert så vi kan bruke det til inlogging.
+        await conn.query(`INSERT INTO bankAccounts (Aname, balance,user_id) VALUES(
+            "${bAccount.Aname}",
+            "${bAccount.balance}",
+            "${user.id}}"
+            ); `)
+        }
+    catch(error){
+        console.error('Insert init error:', error)
+    }
+}
 //her så exporter jeg alle funksjonene som jeg vil bruke i andre script.
-module.exports = {pool, initDB, DB_NAME, registerUser, getUser, getUserById}
+module.exports = {pool, initDB, DB_NAME, registerUser, getUser, getUserById, makeAccount}
  
