@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 const loginRoute = require(`./routes/login`)
 const dashboardRoute = require(`./routes/dahsboard`)
 const registerRoute = require(`./routes/register`)
+const { checkCurrentUser } = require("./middleware/authMiddleWare")
 
 app.use(`/login`, loginRoute)
 app.use(`/dashboard`, dashboardRoute)

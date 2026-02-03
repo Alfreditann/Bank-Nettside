@@ -33,4 +33,5 @@ router.post("/", async (req, res) => {
         res.redirect("/register")
     }
 })
+
 module.exports = router;
