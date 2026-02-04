@@ -126,19 +126,31 @@ async function getUserById(id) {
         process.exit(1)
     }
 }
-async function makeAccount(bAccount) {
+async function makeAccount({Aname, balance, userId}) {
     try{
       // query sier at dette skal skje i databasen. vi inserter values som brukeren har registrert så vi kan bruke det til inlogging.
-        await conn.query(`INSERT INTO bankAccounts (Aname, balance,user_id) VALUES(
-            "${bAccount.Aname}",
-            "${bAccount.balance}",
-            "${user.id}}"
+        await conn.query(`INSERT INTO bankAccounts (Aname, balance,userId) VALUES(
+            "${Aname}",
+            "${balance}",
+            "${userId}"
             ); `)
         }
     catch(error){
         console.error('Insert init error:', error)
     }
 }
+async function getUserAccounts(userId) {
+    try {
+        const [rows] = await conn.query(
+            'SELECT Aname, balance FROM bankAccounts WHERE userId = ?',
+            [userId]
+        );
+        return rows;
+    } catch (error) {
+        console.error('Error fetching user accounts:', error);
+        return [];
+    }
+}
 //her så exporter jeg alle funksjonene som jeg vil bruke i andre script.
-module.exports = {pool, initDB, DB_NAME, registerUser, getUser, getUserById, makeAccount}
+module.exports = {pool, initDB, getUserAccounts, DB_NAME, registerUser, getUser, getUserById, makeAccount}
  
