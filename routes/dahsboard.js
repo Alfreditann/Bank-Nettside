@@ -10,24 +10,27 @@ app.use(express.urlencoded({ extended: true }));
 
 
 router.get("/", (req, res) => {
+   
+    
     res.render("dashboard.ejs")
+
 })
 
-router.post("/", checkCurrentUser, async (req, res, next) => {
+router.post("/", async (req, res, next) => {
    
-
-    try{
+    try {
+        checkCurrentUser(req, res, next)
+       
         let bAccount = {
             Aname: req.body.Aname,
-            balance: req.body.balance,
-            userId: req.user.id
+            userId: req.user.id,
+            balance: req.body.balance
         }
         await makeAccount(bAccount)
-        res.redirect("/accounts")
-    }
-    catch(error){
-        console.log(error)
         res.redirect("/dashboard")
+    }
+    catch (error) {
+        console.error('Insert init error:', error)
     }
 
 })
