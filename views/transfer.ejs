@@ -1,1 +1,140 @@
-hei
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0b1f33;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 45px 50px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+}
+
+/* Brand */
+.brand {
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #00c6ff;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+/* Title */
+h1 {
+  margin-bottom: 25px;
+  font-size: 2.3rem;
+  font-weight: 600;
+}
+
+/* Info / messages */
+.info-message {
+  margin-bottom: 25px;
+  color: #00c6ff;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  text-shadow: 0 0 4px rgba(0, 198, 255, 0.5);
+}
+
+/* Form fields */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+form label {
+  font-size: 1rem;            
+  font-weight: 600;           
+  margin-bottom: 8px;        /* adds some space under the text */
+  color: #00c6ff;             
+}
+
+
+form input[type="text"],
+form input[type="number"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+form input:focus {
+  outline: none;
+  border: 1px solid #00c6ff;
+  box-shadow: 0 0 8px rgba(0, 198, 255, 0.5);
+}
+
+/* Submit button */
+form button[type="submit"] {
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #00c6ff;
+  color: #001b2e;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 198, 255, 0.35);
+}
+
+/* Link under form */
+form + a {
+  display: inline-block;
+  margin-top: 12px;
+  background: #00c6ff;
+  color: #001b2e;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
+}
+
+form + a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 198, 255, 0.35);
+}
+</style>
+
+
+<form action="/transfer" method="post">
+  <div>
+    <label for="yourAccount">Account you want to transfer from</label>
+    <input type="text" name="yourAccount" id="yourAccount" required>
+  </div>
+
+  <div>
+    <label for="accountName">Account you want to transfer to</label>
+    <input type="text" name="accountName" id="accountName" required>
+  </div>
+
+  <div>
+    <label for="amount">Amount</label>
+    <input type="number" name="amount" id="amount" min="1" required>
+  </div>
+
+  <button type="submit">Transfer</button>
+</form>

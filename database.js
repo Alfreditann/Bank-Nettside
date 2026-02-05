@@ -151,6 +151,37 @@ async function getUserAccounts(userId) {
         return [];
     }
 }
+async function withdrawMoney({ yourAccount, accountName, amount }) {
+
+    try {
+
+        const [withdraw] = await conn.query(
+            `UPDATE bankAccounts
+             SET balance = balance - ?
+             WHERE Aname = ? AND balance >= ?`,
+            [amount, yourAccount, amount]
+        );
+
+        if (withdraw.affectedRows === 0) {
+            throw new Error("Insufficient funds or account not found");
+        }
+        await conn.query(
+            `UPDATE bankAccounts
+             SET balance = balance + ?
+             WHERE Aname = ?`,
+            [amount, accountName]
+        );
+
+        await conn.commit();
+        console.log("Transfer successful!");
+    } catch (error) {
+        await conn.rollback();
+        console.error("Transfer failed:", error);
+    } finally {
+        conn.release();
+    }
+}
+
 //her så exporter jeg alle funksjonene som jeg vil bruke i andre script.
-module.exports = {pool, initDB, getUserAccounts, DB_NAME, registerUser, getUser, getUserById, makeAccount}
+module.exports = {pool, initDB, withdrawMoney, getUserAccounts, DB_NAME, registerUser, getUser, getUserById, makeAccount}
  

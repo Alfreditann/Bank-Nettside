@@ -3,6 +3,7 @@ const { checkCurrentUser } = require('../middleware/authMiddleWare')
 const {getUserAccounts} = require("../database.js")
 const router = express.Router()
 
+
 router.get('/', checkCurrentUser, async (req, res) => {
     const userId = req.user?.id;
 
@@ -19,6 +20,8 @@ router.get('/', checkCurrentUser, async (req, res) => {
         ? 'Here are your active accounts'
         : 'No current bank accounts';
 
+    
+
     res.render('accounts.ejs', { message, accounts });
 });
-module.exports = router
+module.exports = router;
