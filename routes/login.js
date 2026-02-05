@@ -2,7 +2,6 @@ const { initDB, registerUser, getUser, getUserById } = require("../database")
 const express = require("express")
 const path = require("path")
 const bcrypt = require("bcrypt")
-const bodyParser = require("body-parser")
 const router = express.Router()
 const jwt = require("jsonwebtoken")
 
@@ -34,7 +33,7 @@ router.post('/', async (req, res) => {
     }
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" }) //definerer token så jeg kan se den i webbrowser
-res.setHeader('Set-Cookie', `token=${token}; Max-Age=3600`);
+    res.setHeader('Set-Cookie', `token=${token}; Max-Age=3600`);
     //res.cookie("token", token, { maxAge: 1000 * 3600 }) // lagrer token i cokkies og så skal den expire etter en time
     res.render("dashboard.ejs", { name: user.username });
 

@@ -2,23 +2,27 @@ const express = require("express")
 const app = express()
 const jwt = require("jsonwebtoken")
 const user = require("user")
-const {cookie } = require("../routes/login")
 
 
 
 const checkCurrentUser = (req, res, next) => {
-   
- const token = req.headers.cookie.split('=')[1];
+
+    const cookie = req.headers.cookie;
+    if (!cookie) {
+        res.locals.currentUser = null;
+        next();
+    }
+    const token = cookie.split("; ").find(row => row.startsWith("token="))?.split("=")[1];
     if (!token) {
         res.locals.currentUser = null;
-         next();
+        return next();
     }
 
-    try {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-        res.locals.currentUser = decodedToken;
-        req.user = decodedToken;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = { id: decoded.id };
+        res.locals.currentUser = req.user;
         next();
     } catch (err) {
         console.error(err.message);
@@ -26,4 +30,4 @@ const checkCurrentUser = (req, res, next) => {
         next();
     }
 };
-module.exports = {checkCurrentUser}
+module.exports = { checkCurrentUser }
