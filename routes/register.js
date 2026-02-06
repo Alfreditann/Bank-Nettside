@@ -1,5 +1,7 @@
 const express = require("express")
 const router = express.Router()
+const { initDB, registerUser, getUser, getUserById } = require("../database")
+const bcrypt = require("bcrypt")
 
 router.get("/", (req, res) => {
     res.render('register.ejs', { error: req.query.error || null });
@@ -20,6 +22,7 @@ router.post("/", async (req, res) => {
             username: req.body.username,
             password: hashedPassword
         }
+        console.log("hei", user)
         if (existingUser) {
             console.log("heipådei")
             return res.render('register.ejs', { error: "username is alredy in use" }) //hvis den ikke finner brukeren så skal den sende error
@@ -29,7 +32,8 @@ router.post("/", async (req, res) => {
 
     }
 
-    catch {
+    catch(error) {
+        console.log(error)
         res.redirect("/register")
     }
 })
