@@ -1,5 +1,5 @@
-// Henter ut funksjoner fra database.js
-const { initDB, registerUser, getUser, getUserById } = require("./database")
+// Henter ut funksjoner fra pgdb.js
+const { initDB, registerUser, getUser, getUserById } = require("./pgdb")
 
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config()

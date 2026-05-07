@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { withdrawMoney } = require("../database")
+const { withdrawMoney } = require("../pgdb")
 
 router.get("/", (req, res) => {
     res.render("transfer.ejs");

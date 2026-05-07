@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const { initDB, registerUser, getUser, getUserById } = require("../database")
+const { initDB, registerUser, getUser, getUserById } = require("../pgdb")
 const bcrypt = require("bcrypt")
 
 router.get("/", (req, res) => {

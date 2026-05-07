@@ -1,6 +1,6 @@
 const express = require('express')
 const { checkCurrentUser } = require('../middleware/authMiddleWare')
-const {getUserAccounts} = require("../database.js")
+const {getUserAccounts} = require("../pgdb")
 const router = express.Router()
 
 

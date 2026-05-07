@@ -1,4 +1,4 @@
-const { initDB, registerUser, getUser, getUserById } = require("../database")
+const { initDB, registerUser, getUser, getUserById } = require("../pgdb")
 const express = require("express")
 const path = require("path")
 const bcrypt = require("bcrypt")
