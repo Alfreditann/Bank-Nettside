@@ -183,5 +183,5 @@ async function withdrawMoney({ yourAccount, accountName, amount }) {
 }
 
 //her så exporter jeg alle funksjonene som jeg vil bruke i andre script.
-module.exports = {pool, initDB, withdrawMoney, getUserAccounts, DB_NAME, registerUser, getUser, getUserById, makeAccount}
+//module.exports = {pool, initDB, withdrawMoney, getUserAccounts, DB_NAME, registerUser, getUser, getUserById, makeAccount}
  
