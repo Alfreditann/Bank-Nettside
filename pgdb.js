@@ -150,11 +150,6 @@ async function withdrawMoney({ yourAccount, accountName, amount }) {
 }
 
 
-function generateAccountId() {
-  return crypto.randomInt(1_000_000_000, 10_000_000_000);
-}
-
-
 // Initialize immediately
 initDB();
 
