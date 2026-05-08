@@ -1,5 +1,7 @@
 const pg = require('pg');
 require("dotenv").config();
+const crypto = require("crypto");
+
 
 const pool = new pg.Pool({
     user: process.env.DB_USER,
@@ -30,10 +32,25 @@ async function initDB() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS bankAccounts (
                 id SERIAL PRIMARY KEY,
+                accountId BIGINT,
                 Aname VARCHAR(50) NOT NULL,
                 userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                 balance INTEGER NOT NULL
             )
+        `);
+        generateAccountId();
+        print(generateAccountId());
+
+        // Ensure existing deployments also get the new accountId column.
+        await client.query(`
+            ALTER TABLE bankAccounts
+            ADD COLUMN IF NOT EXISTS accountId BIGINT
+        `);
+
+        await client.query(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_bankaccounts_accountid
+            ON bankAccounts (accountId)
+            WHERE accountId IS NOT NULL
         `);
 
         console.log('Postgres schema ready');
@@ -144,6 +161,12 @@ async function withdrawMoney({ yourAccount, accountName, amount }) {
         client.release();
     }
 }
+
+
+function generateAccountId() {
+  return crypto.randomInt(1_000_000_000, 10_000_000_000);
+}
+
 
 // Initialize immediately
 initDB();

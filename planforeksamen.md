@@ -1,18 +1,17 @@
-SKJEKKE AT ALT PÅ THE RAS PI VIRKER
+SKJEKKE AT ALT PÅ THE RAS PI VIRKER: check
 
 
 
-bankaccounts name bug
+bankaccounts name bug: check
 
-shell script startup for windows
+shell script startup for windows: check
 
-brukerveileding
+brukerveileding:
 
-psql.js rewievs
+psql.js rewievs:
 
-bug fixes: teste login, regiser, transfer osv
+bug fixes: teste login, regiser, transfer osv:
 
-bytte transfer fra name til unik id
+bytte transfer fra name til unik id:
 
-restyle alt
-
+restyle alt:
