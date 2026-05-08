@@ -38,8 +38,6 @@ async function initDB() {
                 balance INTEGER NOT NULL
             )
         `);
-        generateAccountId();
-        console.log(generateAccountId());
 
         // Ensure existing deployments also get the new accountId column.
         await client.query(`
@@ -47,8 +45,10 @@ async function initDB() {
             ADD COLUMN IF NOT EXISTS accountId BIGINT
         `);
 
+        await client.query(`DROP INDEX IF EXISTS idx_bankaccounts_accountid`);
+
         await client.query(`
-            CREATE UNIQUE INDEX IF NOT EXISTS idx_bankaccounts_accountid
+            CREATE UNIQUE INDEX idx_bankaccounts_accountid
             ON bankAccounts (accountId)
             WHERE accountId IS NOT NULL
         `);
