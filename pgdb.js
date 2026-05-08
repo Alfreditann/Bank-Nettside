@@ -39,7 +39,7 @@ async function initDB() {
             )
         `);
         generateAccountId();
-        print(generateAccountId());
+        console.log(generateAccountId());
 
         // Ensure existing deployments also get the new accountId column.
         await client.query(`
