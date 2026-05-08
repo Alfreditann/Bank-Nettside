@@ -39,19 +39,6 @@ async function initDB() {
             )
         `);
 
-        // Ensure existing deployments also get the new accountId column.
-        await client.query(`
-            ALTER TABLE bankAccounts
-            ADD COLUMN IF NOT EXISTS accountId BIGINT
-        `);
-
-        await client.query(`DROP INDEX IF EXISTS idx_bankaccounts_accountid`);
-
-        await client.query(`
-            CREATE UNIQUE INDEX idx_bankaccounts_accountid
-            ON bankAccounts (accountId)
-            WHERE accountId IS NOT NULL
-        `);
 
         console.log('Postgres schema ready');
     } catch (err) {
