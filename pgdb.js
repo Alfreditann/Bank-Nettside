@@ -103,7 +103,7 @@ async function makeAccount({ Aname, balance, userId }) {
 async function getUserAccounts(userId) {
     try {
         const res = await pool.query(
-            `SELECT Aname, balance FROM bankAccounts WHERE userId = $1`,
+            `SELECT Aname, balance, id FROM bankAccounts WHERE userId = $1`,
             [userId]
         );
         return res.rows;
