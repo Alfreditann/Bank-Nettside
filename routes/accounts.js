@@ -22,6 +22,6 @@ router.get('/', checkCurrentUser, async (req, res) => {
 
     
 
-    res.render('accounts.ejs', { message, accounts });
+    res.render('accounts.ejs', { message, accounts});
 });
 module.exports = router;
