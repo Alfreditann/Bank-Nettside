@@ -1,157 +1,163 @@
-const pg = require('pg');
+const pg = require("pg");
 require("dotenv").config();
-const crypto = require("crypto");
-
 
 const pool = new pg.Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    port: Number(process.env.DB_PORT),
 });
 
-// Initialize database schema
+// --------------------
+// INIT DB (SAFE)
+// --------------------
 async function initDB() {
     const client = await pool.connect();
 
     try {
         console.log("Connected to PostgreSQL database");
 
-        // Create users table
+        // USERS table
         await client.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(50) NOT NULL UNIQUE,
-                username VARCHAR(50) NOT NULL,
+                username VARCHAR(50) NOT NULL UNIQUE,
                 password VARCHAR(255) NOT NULL
-            )
+            );
         `);
 
-        // Create bankAccounts table with foreign key to users
+        // BANK ACCOUNTS table
         await client.query(`
-            CREATE TABLE IF NOT EXISTS bankAccounts (
+            CREATE TABLE IF NOT EXISTS bank_accounts (
                 id SERIAL PRIMARY KEY,
-                accountId BIGINT,
-                Aname VARCHAR(50) NOT NULL,
-                userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                balance INTEGER NOT NULL
-            )
+                account_name VARCHAR(50) NOT NULL,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                balance INTEGER NOT NULL DEFAULT 0
+            );
         `);
 
-
-        console.log('Postgres schema ready');
+        console.log("Postgres schema ready");
     } catch (err) {
-        console.error('Error initializing PostgreSQL database:', err);
-        process.exit(1);
+        console.error("Error initializing PostgreSQL database:", err);
+        throw err;
     } finally {
         client.release();
     }
 }
 
-// Register a new user
+// --------------------
+// USERS
+// --------------------
 async function registerUser(user) {
-    try {
-        const res = await pool.query(
-            `INSERT INTO users (name, username, password) VALUES ($1, $2, $3) RETURNING *`,
-            [user.name, user.username, user.password]
-        );
-        return res.rows[0];
-    } catch (error) {
-        console.error('Insert init error:', error);
-        throw error;
-    }
+    const res = await pool.query(
+        `INSERT INTO users (name, username, password)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [user.name, user.username, user.password]
+    );
+    return res.rows[0];
 }
 
-// Get user by username
 async function getUser(username) {
-    try {
-        const res = await pool.query(`SELECT * FROM users WHERE username = $1`, [username]);
-        return res.rows[0] || null;
-    } catch (error) {
-        console.error('Get user error:', error);
-        throw error;
-    }
+    const res = await pool.query(
+        `SELECT * FROM users WHERE username = $1`,
+        [username]
+    );
+    return res.rows[0] || null;
 }
 
-// Get user by id
 async function getUserById(id) {
-    try {
-        const res = await pool.query(`SELECT * FROM users WHERE id = $1`, [id]);
-        return res.rows[0] || null;
-    } catch (error) {
-        console.error('Get user by id error:', error);
-        throw error;
-    }
+    const res = await pool.query(
+        `SELECT * FROM users WHERE id = $1`,
+        [id]
+    );
+    return res.rows[0] || null;
 }
 
-// Create a bank account for a user
-async function makeAccount({ Aname, balance, userId }) {
-    try {
-        const res = await pool.query(
-            `INSERT INTO bankAccounts (Aname, balance, userId) VALUES ($1, $2, $3) RETURNING *`,
-            [Aname, balance, userId]
-        );
-        return res.rows[0];
-    } catch (error) {
-        console.error('Create account error:', error);
-        throw error;
-    }
+// --------------------
+// ACCOUNTS
+// --------------------
+async function makeAccount({ accountName, balance = 0, userId }) {
+    const res = await pool.query(
+        `INSERT INTO bank_accounts (account_name, balance, user_id)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [accountName, balance, userId]
+    );
+    return res.rows[0];
 }
 
-// Get user accounts
 async function getUserAccounts(userId) {
-    try {
-        const res = await pool.query(
-            `SELECT Aname, balance, id FROM bankAccounts WHERE userId = $1`,
-            [userId]
-        );
-        return res.rows;
-    } catch (error) {
-        console.error('Error fetching user accounts:', error);
-        return [];
-    }
+    const res = await pool.query(
+        `SELECT id, account_name, balance
+         FROM bank_accounts
+         WHERE user_id = $1`,
+        [userId]
+    );
+    return res.rows;
 }
 
-// Transfer money between accounts (transactional)
-async function withdrawMoney({ yourAccount, accountName, amount }) {
+// --------------------
+// TRANSFER MONEY (SAFE)
+// --------------------
+async function transferMoney({ fromAccount, toAccount, amount }) {
     const client = await pool.connect();
+
     try {
-        await client.query('BEGIN');
+        await client.query("BEGIN");
 
-        const withdrawRes = await client.query(
-            `UPDATE bankAccounts SET balance = balance - $1 WHERE Aname = $2 AND balance >= $1 RETURNING id`,
-            [amount, yourAccount]
+        const withdraw = await client.query(
+            `UPDATE bank_accounts
+             SET balance = balance - $1
+             WHERE account_name = $2 AND balance >= $1
+             RETURNING id`,
+            [amount, fromAccount]
         );
 
-        if (withdrawRes.rowCount === 0) {
-            throw new Error('Insufficient funds or account not found');
+        if (withdraw.rowCount === 0) {
+            throw new Error("Insufficient funds or source account not found");
         }
 
-        const depositRes = await client.query(
-            `UPDATE bankAccounts SET balance = balance + $1 WHERE Aname = $2 RETURNING id`,
-            [amount, accountName]
+        const deposit = await client.query(
+            `UPDATE bank_accounts
+             SET balance = balance + $1
+             WHERE account_name = $2
+             RETURNING id`,
+            [amount, toAccount]
         );
 
-        if (depositRes.rowCount === 0) {
-            throw new Error('Destination account not found');
+        if (deposit.rowCount === 0) {
+            throw new Error("Destination account not found");
         }
 
-        await client.query('COMMIT');
-        console.log('Transfer successful!');
+        await client.query("COMMIT");
         return true;
-    } catch (error) {
-        await client.query('ROLLBACK');
-        console.error('Transfer failed:', error);
-        throw error;
+
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
     } finally {
         client.release();
     }
 }
 
+// --------------------
+// INIT (IMPORTANT FIX)
+// --------------------
+initDB().catch(err => {
+    console.error("Fatal DB init error:", err);
+    process.exit(1);
+});
 
-// Initialize immediately
-initDB();
-
-module.exports = { pool, initDB, registerUser, getUser, getUserById, makeAccount, getUserAccounts, withdrawMoney };
-
+module.exports = {
+    pool,
+    initDB,
+    registerUser,
+    getUser,
+    getUserById,
+    makeAccount,
+    getUserAccounts,
+    transferMoney
+};
