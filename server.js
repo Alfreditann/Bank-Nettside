@@ -19,6 +19,7 @@ const dashboardRoute = require(`./routes/dahsboard`)
 const registerRoute = require(`./routes/register`)
 const accountsRoute = require(`./routes/accounts`)
 const transferRoute = require(`./routes/transfer`)
+const credentialsRoute = require(`./routes/credentials`)
 const { checkCurrentUser } = require("./middleware/authMiddleWare")
 
 app.use(`/login`, loginRoute)
@@ -26,10 +27,7 @@ app.use(`/dashboard`, dashboardRoute)
 app.use(`/register`, registerRoute)
 app.use(`/accounts`, accountsRoute)
 app.use(`/transfer`, transferRoute)
-
-app.get('/credentials', (req, res) => {
-    res.render('credentials.ejs');
-});
+app.use(`/credentials`, credentialsRoute)
 
 initDB()
 
