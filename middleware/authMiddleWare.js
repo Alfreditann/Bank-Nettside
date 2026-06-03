@@ -9,7 +9,7 @@ const checkCurrentUser = (req, res, next) => {
     const cookie = req.headers.cookie;
     if (!cookie) {
         res.locals.currentUser = null;
-        next();
+        return next();
     }
     const token = cookie.split("; ").find(row => row.startsWith("token="))?.split("=")[1];
     if (!token) {
