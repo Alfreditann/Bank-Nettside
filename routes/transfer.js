@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { withdrawMoney } = require("../pgdb")
+const { transferMoney } = require("../pgdb");
 
 router.get("/", (req, res) => {
     res.render("transfer.ejs");
@@ -8,12 +8,19 @@ router.get("/", (req, res) => {
 
 router.post("/", async (req, res) => {
     const { yourAccount, accountId, amount } = req.body;
+    const fromAccountId = Number(yourAccount);
+    const toAccountId = Number(accountId);
+    const transferAmount = Number(amount);
 
     try {
-        await withdrawMoney({
-            yourAccount: yourAccount,
-            accountName: accountId,
-            amount: Number(amount)
+        if (!Number.isInteger(fromAccountId) || !Number.isInteger(toAccountId) || !Number.isFinite(transferAmount) || transferAmount <= 0) {
+            return res.redirect("/transfer?error=1");
+        }
+
+        await transferMoney({
+            fromAccount: fromAccountId,
+            toAccount: toAccountId,
+            amount: transferAmount
         });
 
         res.redirect("/accounts?success=1");
