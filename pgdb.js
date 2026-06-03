@@ -79,12 +79,18 @@ async function getUserById(id) {
 // --------------------
 // ACCOUNTS
 // --------------------
-async function makeAccount({ accountName, balance = 0, userId }) {
+async function makeAccount({ Aname, balance = 0, userId }) {
+    const normalizedAccountName = String(Aname || "").trim();
+
+    if (!normalizedAccountName) {
+        throw new Error("Account name is required");
+    }
+
     const res = await pool.query(
         `INSERT INTO bank_accounts (account_name, balance, user_id)
          VALUES ($1, $2, $3)
          RETURNING *`,
-        [accountName, balance, userId]
+        [normalizedAccountName, Number(balance) || 0, userId]
     );
     return res.rows[0];
 }
