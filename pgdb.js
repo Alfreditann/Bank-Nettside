@@ -135,6 +135,21 @@ async function transferMoney({ fromAccount, toAccount, amount }) {
         client.release();
     }
 }
+async function updatecred(newcred) {
+    try{
+    `UPDATE users
+    SET username = $2
+    WHERE username = $1
+    `
+    [newcred.username, newcred.newusername]
+    console.log("succsess")
+    }
+    catch(err){
+        console.log(err)
+    }
+
+    
+}
 
 initDB().catch(err => {
     console.error("Fatal DB init error:", err);
