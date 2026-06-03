@@ -84,15 +84,6 @@ async function makeAccount({ accountName, balance = 0, userId }) {
     return res.rows[0];
 }
 
-async function getUserAccounts(userId) {
-    const res = await pool.query(
-        `SELECT id, account_name, balance
-         FROM bank_accounts
-         WHERE user_id = $1`,
-        [userId]
-    );
-    return res.rows;
-}
 
 async function transferMoney({ fromAccount, toAccount, amount }) {
     const client = await pool.connect();
@@ -147,6 +138,5 @@ module.exports = {
     getUser,
     getUserById,
     makeAccount,
-    getUserAccounts,
     transferMoney
 };

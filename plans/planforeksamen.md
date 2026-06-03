@@ -11,8 +11,8 @@ brukerveileding: check
 psql.js rewievs:check
 
 
-bug fixes: teste login, regiser, transfer osv:
+bug fixes: teste login, regiser, transfer osv: check
 
-bytte transfer fra name til unik id:
+bytte transfer fra name til unik id: check
 
-restyle alt:
+middleware: 
