@@ -79,8 +79,8 @@ async function getUserById(id) {
 // --------------------
 // ACCOUNTS
 // --------------------
-async function makeAccount({ Aname, balance = 0, userId }) {
-    const normalizedAccountName = String(Aname || "").trim();
+async function makeAccount({ accountName, balance = 0, userId }) {
+    const normalizedAccountName = String(accountName || "").trim();
 
     if (!normalizedAccountName) {
         throw new Error("Account name is required");
