@@ -27,6 +27,10 @@ app.use(`/register`, registerRoute)
 app.use(`/accounts`, accountsRoute)
 app.use(`/transfer`, transferRoute)
 
+app.get('/credentials', (req, res) => {
+    res.render('credentials.ejs');
+});
+
 initDB()
 
 app.use(express.static(path.join(__dirname, "public")));
