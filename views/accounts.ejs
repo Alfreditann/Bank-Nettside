@@ -95,7 +95,7 @@ a:hover {
   <div class="container">
     <div class="brand">Viking Bank</div>
     <h1>My Bank Accounts</h1>
-    
+     
 
     <% if (message) { %>
       <p class="info-message"><%= message %></p>
@@ -105,7 +105,7 @@ a:hover {
       <ul>
         <% accounts.forEach(account => { %>
           <li>
-            <%= account.id %><strong><%= account.Aname %></strong> <%= account.balance %> NOK
+            <%= account.id %><strong><%= account.account_name %></strong> <%= account.balance %> NOK
           </li>
         <% }) %>
       </ul>
