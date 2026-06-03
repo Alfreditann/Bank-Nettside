@@ -135,20 +135,21 @@ async function transferMoney({ fromAccount, toAccount, amount }) {
         client.release();
     }
 }
-async function updatecred(newcred) {
-    try{
-    `UPDATE users
-    SET username = $2
-    WHERE username = $1
-    `
-    [newcred.username, newcred.newusername]
-    console.log("succsess")
+async function updatecred({ username, newusername }) {
+    try {
+        const res = await pool.query(
+            `UPDATE users
+             SET username = $2
+             WHERE username = $1
+             RETURNING *`,
+            [username, newusername]
+        );
+        console.log("success");
+        return res.rows[0] || null;
+    } catch (err) {
+        console.log(err);
+        throw err;
     }
-    catch(err){
-        console.log(err)
-    }
-
-    
 }
 
 initDB().catch(err => {
@@ -164,5 +165,6 @@ module.exports = {
     getUserById,
     makeAccount,
     getUserAccounts,
-    transferMoney
+    transferMoney,
+    updatecred
 };

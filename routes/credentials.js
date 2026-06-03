@@ -1,4 +1,5 @@
 const express = require('express');
+const { updatecred } = require('../pgdb');
 
 const router = express.Router();
 
@@ -10,13 +11,12 @@ router.get('/', (req, res) => {
 	});
 });
 
-router.post('/', (req, res) => {
-	const { username, password, newusername } = req.body || {};
-    const newcred = {username, newusername}
-	console.log(username, newusername, password)
+router.post('/', async (req, res) => {
+	const { username, newusername } = req.body || {};
+	await updatecred({ username, newusername });
 	return res.render('credentials.ejs', {
 		saved: true,
-		typedUsername: username || ''
+		typedUsername: newusername || ''
 	});
 });
 
