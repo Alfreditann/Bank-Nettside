@@ -6,9 +6,10 @@ bankaccounts name bug: check
 
 shell script startup for windows: check
 
-brukerveileding:
+brukerveileding: check
 
-psql.js rewievs:
+psql.js rewievs:check
+
 
 bug fixes: teste login, regiser, transfer osv:
 

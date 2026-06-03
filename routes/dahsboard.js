@@ -20,6 +20,7 @@ router.post("/", checkCurrentUser, async (req, res, next) => {
     userId: req.user.id
 }
     await makeAccount(bAccount);
+    console.log(accountName, balance, req.user.id);
     res.redirect("/accounts");
   } catch (error) {
     console.log(error);

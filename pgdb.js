@@ -9,16 +9,12 @@ const pool = new pg.Pool({
     port: Number(process.env.DB_PORT),
 });
 
-// --------------------
-// INIT DB (SAFE)
-// --------------------
 async function initDB() {
     const client = await pool.connect();
 
     try {
         console.log("Connected to PostgreSQL database");
 
-        // USERS table
         await client.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -28,7 +24,6 @@ async function initDB() {
             );
         `);
 
-        // BANK ACCOUNTS table
         await client.query(`
             CREATE TABLE IF NOT EXISTS bank_accounts (
                 id SERIAL PRIMARY KEY,
@@ -47,9 +42,6 @@ async function initDB() {
     }
 }
 
-// --------------------
-// USERS
-// --------------------
 async function registerUser(user) {
     const res = await pool.query(
         `INSERT INTO users (name, username, password)
@@ -76,9 +68,6 @@ async function getUserById(id) {
     return res.rows[0] || null;
 }
 
-// --------------------
-// ACCOUNTS
-// --------------------
 async function makeAccount({ accountName, balance = 0, userId }) {
     const normalizedAccountName = String(accountName || "").trim();
 
@@ -105,9 +94,6 @@ async function getUserAccounts(userId) {
     return res.rows;
 }
 
-// --------------------
-// TRANSFER MONEY (SAFE)
-// --------------------
 async function transferMoney({ fromAccount, toAccount, amount }) {
     const client = await pool.connect();
 
@@ -149,9 +135,6 @@ async function transferMoney({ fromAccount, toAccount, amount }) {
     }
 }
 
-// --------------------
-// INIT (IMPORTANT FIX)
-// --------------------
 initDB().catch(err => {
     console.error("Fatal DB init error:", err);
     process.exit(1);
