@@ -11,8 +11,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	const { username, password, confirmPassword } = req.body || {};
-	console.log(username, password, confirmPassword)
+	const { username, password, newusername } = req.body || {};
+	console.log(username, newusername, password)
 	return res.render('credentials.ejs', {
 		saved: true,
 		typedUsername: username || ''
