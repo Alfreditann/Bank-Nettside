@@ -7,12 +7,12 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    const { yourAccount, accountName, amount } = req.body;
+    const { yourAccount, accountId, amount } = req.body;
 
     try {
         await withdrawMoney({
             yourAccount: yourAccount,
-            accountName: accountName,
+            accountName: accountId,
             amount: Number(amount)
         });
 

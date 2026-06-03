@@ -103,7 +103,7 @@ async function transferMoney({ fromAccount, toAccount, amount }) {
         const withdraw = await client.query(
             `UPDATE bank_accounts
              SET balance = balance - $1
-             WHERE account_name = $2 AND balance >= $1
+             WHERE id = $2 AND balance >= $1
              RETURNING id`,
             [amount, fromAccount]
         );
@@ -115,7 +115,7 @@ async function transferMoney({ fromAccount, toAccount, amount }) {
         const deposit = await client.query(
             `UPDATE bank_accounts
              SET balance = balance + $1
-             WHERE account_name = $2
+             WHERE id = $2
              RETURNING id`,
             [amount, toAccount]
         );
